@@ -17,6 +17,7 @@ namespace CoreDemo.Controllers
     public class BlogController : Controller
     {
         BlogManager blogManager = new BlogManager(new EfBlogRepository());
+        CategoryManager categoryManager = new CategoryManager(new EfCategoryRepository());
 
         public IActionResult Index()
         {
@@ -31,13 +32,12 @@ namespace CoreDemo.Controllers
         }
         public IActionResult BlogListWithWriter()
         {
-            var values = blogManager.GetBlogListWithWriter(1);
+            var values = blogManager.GetListWithCategoryByWriterBM(1);
             return View(values);
         }
         [HttpGet]
         public IActionResult BlogAdd()
         {
-            CategoryManager categoryManager = new CategoryManager(new EfCategoryRepository());
             List<SelectListItem> categoryValues = (from c in categoryManager.GetAll()
                                                    select new SelectListItem
                                                    {
@@ -69,6 +69,30 @@ namespace CoreDemo.Controllers
                 }
                 return View();
             }
+        }
+        public IActionResult DeleteBlog(int id)
+		{
+            var blogValue= blogManager.GetById(id); 
+            blogManager.Delete(blogValue);  
+            return RedirectToAction("BlogListWithWriter");
+		}
+        [HttpGet]
+        public IActionResult UpdateBlog(int id)
+		{
+            List<SelectListItem> categoryValues = (from c in categoryManager.GetAll()
+                                                   select new SelectListItem
+                                                   {
+                                                       Text = c.Name,
+                                                       Value = c.Id.ToString()
+                                                   }).ToList();
+            ViewBag.cV = categoryValues;
+            var blogValue = blogManager.GetById(id);
+            return View(blogValue);
+		}
+        [HttpPost]
+        public IActionResult UpdateBlog(Blog blog)
+        {
+            return RedirectToAction("BlogListWithWriter");
         }
 
     }

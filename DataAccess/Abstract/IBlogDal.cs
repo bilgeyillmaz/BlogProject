@@ -10,5 +10,6 @@ namespace DataAccess.Abstract
     public interface IBlogDal: IBaseDal<Blog>
     {
         List<Blog> GetAllWithCategory();
+        List<Blog> GetListWithCategoryByWriter(int id);
     }
 }

@@ -1,0 +1,35 @@
+﻿@model Entity.Concrete.Blog
+@{
+    ViewData["Title"] = "UpdateBlog";
+    Layout = "~/Views/Writer/WriterLayout.cshtml";
+}
+
+<h1>Blog Güncelleme Sayfası</h1>
+<br />
+@using (Html.BeginForm("UpdateBlog","Blog", FormMethod.Post ))
+{
+    @Html.Label("Blog ID")
+    @Html.TextBoxFor(b =>b.Id, new {@class="form-control"})
+    <br />
+     @Html.Label("Blog Başlığı")
+    @Html.TextBoxFor(b =>b.Title, new {@class="form-control"})
+    <br />
+     @Html.Label("Blog Thumbnail Url")
+    @Html.TextBoxFor(b =>b.ThumbnailImage, new {@class="form-control"})
+    <br />
+    @Html.Label("Blog Görseli")
+    @Html.TextBoxFor(b =>b.Image, new {@class="form-control"})
+    <br />
+    @Html.Label("Blog Kategori")
+    @Html.DropDownListFor(c => c.CategoryId, (List<SelectListItem>)ViewBag.cV, new { @class = "form-control" })    <br />
+    @Html.Label("Blog İçeriği")
+    @Html.TextAreaFor(b=>b.Content, 15, 3, new { @class = "form-control" })
+     <br />
+     <button class="btn btn-success">Değişiklikleri Kaydet</button>
+}
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
