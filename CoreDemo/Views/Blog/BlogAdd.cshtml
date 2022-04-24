@@ -1,0 +1,31 @@
+﻿@model Entity.Concrete.Blog
+@{
+	ViewData["Title"] = "BlogAdd";
+	Layout = "~/Views/Writer/WriterLayout.cshtml";
+}
+
+<h1>Yeni Blog Girişi</h1>
+<br />
+
+@using (Html.BeginForm("BlogAdd", "Blog", FormMethod.Post))
+{
+	@Html.Label("Blog Başlığı")
+	@Html.TextBoxFor(b=>b.Title, new { @class = "form-control" })
+	@Html.ValidationMessageFor(b=>b.Title)
+	<br />
+	@Html.Label("Blog Görseli")
+	@Html.TextBoxFor(b=>b.Image, new { @class = "form-control" })
+	@Html.ValidationMessageFor(b=>b.Image)
+	<br />
+	@Html.Label("Blog Küçük Görsel")
+	@Html.TextBoxFor(b=>b.ThumbnailImage, new { @class = "form-control" })
+	<br />
+	@Html.Label("Kategori")
+	@Html.DropDownListFor(c => c.CategoryId, (List<SelectListItem>)ViewBag.cV, new { @class = "form-control" })
+	<br />
+	@Html.Label("Blog İçeriği")
+	@Html.TextAreaFor(b=>b.Content, 15, 3, new { @class = "form-control" })
+	@Html.ValidationMessageFor(b=>b.Content)
+	<br />
+	<button class="btn btn-info">Metni Kaydet</button>
+}
