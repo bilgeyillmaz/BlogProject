@@ -35,12 +35,17 @@ namespace Business.Concrete
 
 		public Writer GetById(int id)
 		{
-			throw new NotImplementedException();
+			return _writerDal.GetById(id);	
+		}
+
+		public List<Writer> GetWriterById(int id)
+		{
+			return _writerDal.GetListAll(w=>w.Id == id);	
 		}
 
 		public void Update(Writer writer)
 		{
-			throw new NotImplementedException();
+			 _writerDal.Update(writer);
 		}
 	}
 }

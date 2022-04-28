@@ -55,7 +55,7 @@ namespace Business.Concrete
 
         public void Update(Blog blog)
         {
-            throw new NotImplementedException();
+            _blogDal.Update(blog);
         }
         public List<Blog> GetLastThreeBlog()
         {

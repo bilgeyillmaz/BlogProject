@@ -9,6 +9,6 @@ namespace Business.Abstract
 {
     public interface IWriterService:IBaseService<Writer>
     {
-
+        List<Writer> GetWriterById(int id);
     }
 }
