@@ -13,6 +13,8 @@ namespace Business.Concrete
     {
         IBlogDal _blogDal;
 
+        public IEnumerable<object> Writers { get; set; }
+
         public BlogManager(IBlogDal blogDal)
         {
             _blogDal = blogDal;

@@ -1,6 +1,7 @@
 ﻿using Business.Concrete;
 using Business.ValidationRules.FluentValidation;
 using CoreDemo.Models;
+using DataAccess.Concrete.Context;
 using DataAccess.Concrete.EntityFramework;
 using Entity.Concrete;
 using FluentValidation.Results;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace CoreDemo.Controllers
 {
@@ -44,14 +46,15 @@ namespace CoreDemo.Controllers
 		{
 			return PartialView();
 		}
-		[AllowAnonymous]
 		[HttpGet]
 		public IActionResult WriterUpdateProfile()
 		{
-			var writerValues = writerManager.GetById(1);
+			BlogDbContext blogDbContext = new BlogDbContext();
+			var userMail = User.Identity.Name;
+			var writerId = blogDbContext.Writers.Where(w => w.Email == userMail).Select(w => w.Id).FirstOrDefault();
+			var writerValues = writerManager.GetById(writerId);
 			return View(writerValues);
 		}
-		[AllowAnonymous]
 		[HttpPost]
 		public IActionResult WriterUpdateProfile(Writer writer)
 		{

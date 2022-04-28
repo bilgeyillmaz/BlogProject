@@ -31,12 +31,12 @@ namespace CoreDemo
 
             //proje seviyesinde [Authorize] iþlemi için:
             services.AddMvc(config =>
-			{
-                var policy= new AuthorizationPolicyBuilder()
+            {
+                var policy = new AuthorizationPolicyBuilder()
                                     .RequireAuthenticatedUser()
                                     .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
-			});
+            });
             services.AddMvc();
             services.AddAuthentication(
                 CookieAuthenticationDefaults.AuthenticationScheme)
@@ -59,7 +59,7 @@ namespace CoreDemo
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseStatusCodePagesWithReExecute("/ErrorPage/Error1","?code={0}");   
+            app.UseStatusCodePagesWithReExecute("/ErrorPage/Error1", "?code={0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -73,6 +73,11 @@ namespace CoreDemo
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+           name: "areas",
+           pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+         );
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Blog}/{action=Index}/{id?}");
