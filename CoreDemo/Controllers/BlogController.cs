@@ -14,6 +14,7 @@ using System.Linq;
 
 namespace CoreDemo.Controllers
 {
+    [Authorize]
     public class BlogController : Controller
     {
         BlogManager blogManager = new BlogManager(new EfBlogRepository());
