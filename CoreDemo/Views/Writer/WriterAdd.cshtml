@@ -34,7 +34,7 @@
 						@Html.TextAreaFor(w=>w.About, 15,3, new {@class= "form-control"})
 					</div>
 					<button type="submit" class="btn btn-gradient-primary mr-2">Kaydet</button>
-					<button class="btn btn-light">Vazgeç</button>
+					<button asp-controller="Dashboard" asp-action="Index" class="btn btn-light">Vazgeç</button>
 				</div>
 			</div>
 		</div>

@@ -1,4 +1,6 @@
-﻿
+﻿@using CoreDemo.Models
+@model UserSignInViewModel
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_UserTemplateLayout.cshtml";
@@ -11,13 +13,12 @@
 					<div class="login p-5 bg-light mx-auto mw-100">
 					<form  method="post">
 							<div class="form-group">
-							  <label for="exampleInputEmail1 mb-2">E-Posta Adresi</label>
-							  <input type="email" class="form-control" id="Email" name="Email" aria-describedby="emailHelp" placeholder="" required="">
-							  <small id="emailHelp" class="form-text text-muted">E-Posta adresini kimseyle paylaşmayacağız.</small>
+							  <label for="exampleInputEmail1 mb-2">Kullanıcı Adınız</label>
+							  <input type="text" class="form-control" id="Email" asp-for="@Model.username" aria-describedby="emailHelp" placeholder="" required="">
 							</div>
 							<div class="form-group">
 							  <label for="exampleInputPassword1 mb-2">Şifre</label>
-							  <input type="password" class="form-control" id="Password" name="Password"placeholder="" required="">
+							  <input type="password" class="form-control" id="Password" asp-for="@Model.password" placeholder="" required="">
 							</div>
 							<div class="form-check mb-2">
 							  <input type="checkbox" class="form-check-input" id="exampleCheck1">

@@ -1,7 +1,10 @@
+using DataAccess.Concrete.Context;
+using Entity.Concrete;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +29,14 @@ namespace CoreDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<BlogDbContext>();
+            services.AddIdentity<AppUser, AppRole>(
+                u=>
+                {
+                    u.Password.RequireUppercase = false;
+                    u.Password.RequireNonAlphanumeric = false;
+                }).AddEntityFrameworkStores<BlogDbContext>();
+
             services.AddControllersWithViews();
             services.AddSession();
 
@@ -44,6 +55,14 @@ namespace CoreDemo
                 {
                     c.LoginPath = "/Login/Index";
                 });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(100);
+                options.AccessDeniedPath = new PathString("Login/AccessDenied");
+                options.LoginPath = "/Login/Index/";
+                options.SlidingExpiration = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

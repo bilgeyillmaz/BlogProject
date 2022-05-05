@@ -10,5 +10,6 @@ namespace Business.Abstract
     public interface ICommentService:IBaseService<Comment>
     {
         List<Comment> GetList(int id);
+        List<Comment> GetCommentWithBlog();
     }
 }

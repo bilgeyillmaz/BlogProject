@@ -1,0 +1,18 @@
+﻿@using CoreDemo.Controllers
+@model EmployeeApiModel
+@{
+    ViewData["Title"] = "UpdateEmployee";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>API ile Personel Güncelleme Sayfası</h1>
+
+<form method="post">
+	<label>ID</label>
+	@Html.TextBoxFor(e=>e.Id, new {@class= "form-control"})
+	<br />
+	<label>Personel</label>
+	@Html.TextBoxFor(e=>e.Name, new {@class="form-control"})
+	<br />
+	<button class="btn btn-outline-success">Güncelle</button>
+</form>

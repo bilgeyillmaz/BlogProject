@@ -1,8 +1,10 @@
-﻿using DataAccess.Concrete.Context;
+﻿using CoreDemo.Models;
+using DataAccess.Concrete.Context;
 using Entity.Concrete;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,48 +13,45 @@ using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
 {
+    [AllowAnonymous]
     public class LoginController : Controller
     {
-        [AllowAnonymous]
+        private readonly SignInManager<AppUser> _signInManager;
+
+        public LoginController(SignInManager<AppUser> signInManager)
+        {
+            _signInManager = signInManager;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
-
         [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Index(Writer writer)
+        public async Task<IActionResult> Index(UserSignInViewModel userSignInViewModel)
         {
-            BlogDbContext blogDbContext = new BlogDbContext();
-            var dataValue = blogDbContext.Writers.FirstOrDefault(w => w.Email == writer.Email && w.Password == writer.Password);
-            if (dataValue != null)
+            if(ModelState.IsValid)
             {
-                var claims = new List<Claim>
+            var result = await _signInManager.PasswordSignInAsync(userSignInViewModel.username, userSignInViewModel.password, false, true);
+                if(result.Succeeded)
                 {
-                    new Claim(ClaimTypes.Name, writer.Email)
-                };
-                var userIdentity = new ClaimsIdentity(claims, "a");  
-                ClaimsPrincipal principal= new ClaimsPrincipal(userIdentity);
-                await HttpContext.SignInAsync(principal);
-                return RedirectToAction("Index", "Dashboard");
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Login");
+                }
             }
-            else
-            {
-                return View();
-            }
+            return View();
         }
-        //         BlogDbContext blogDbContext = new BlogDbContext();
-        //         var dataValue = blogDbContext.Writers.FirstOrDefault(w => w.Email == writer.Email && w.Password == writer.Password);
-        //         if(dataValue != null)
-        //{
-        //             HttpContext.Session.SetString("username", writer.Email);
-        //             return RedirectToAction("Index", "Writer");   
-        //}
-        //         else
-        //{
-        //              return View();
-        //}
-
-
+        public async Task<IActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Login");
+        }
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

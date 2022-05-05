@@ -1,4 +1,5 @@
 ﻿using Entity.Concrete;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.Context
 {
-    public class BlogDbContext:DbContext
+    public class BlogDbContext:IdentityDbContext<AppUser, AppRole, int>
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,7 +28,10 @@ namespace DataAccess.Concrete.Context
                 .WithMany(y=>y.WriterReceiver)
                 .HasForeignKey(z => z.ReceiverId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+            
+            base.OnModelCreating(modelBuilder);
         }
+        
         public DbSet<About> Abouts { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -39,5 +43,6 @@ namespace DataAccess.Concrete.Context
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Message2> Message2s { get; set; }
+        public DbSet<Admin> Admins { get; set; }
     }
 }

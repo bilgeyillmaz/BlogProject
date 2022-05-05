@@ -1,10 +1,12 @@
 ﻿using Business.Concrete;
 using DataAccess.Concrete.EntityFramework;
 using Entity.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreDemo.Controllers
 {
+    [AllowAnonymous]
     public class NewsLetterController : Controller
     {
         NewsLetterManager newsLetterManager = new NewsLetterManager(new EfNewsLetterRepository());
@@ -15,7 +17,7 @@ namespace CoreDemo.Controllers
             return PartialView();
         }
         [HttpPost]  
-        public PartialViewResult SubscribeMail(NewsLetter newsLetter)
+        public IActionResult SubscribeMail(NewsLetter newsLetter)
         {
             newsLetter.MailStatus = true;
             newsLetterManager.Add(newsLetter);

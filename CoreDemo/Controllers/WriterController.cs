@@ -6,16 +6,25 @@ using DataAccess.Concrete.EntityFramework;
 using Entity.Concrete;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CoreDemo.Controllers
 {
 	public class WriterController : Controller
 	{
-		WriterManager writerManager = new WriterManager(new EfWriterRepository());
+		private readonly UserManager<AppUser> _userManager;
+
+        public WriterController(UserManager<AppUser> userManager)
+        {
+            _userManager = userManager;
+        }
+		UserManager userManager = new UserManager(new EfUserRepository());
+        WriterManager writerManager = new WriterManager(new EfWriterRepository());
 		[Authorize]
 		public IActionResult Index()
 		{
@@ -47,33 +56,26 @@ namespace CoreDemo.Controllers
 			return PartialView();
 		}
 		[HttpGet]
-		public IActionResult WriterUpdateProfile()
+		public async Task<IActionResult> WriterUpdateProfile()
 		{
-			BlogDbContext blogDbContext = new BlogDbContext();
-			var userMail = User.Identity.Name;
-			var writerId = blogDbContext.Writers.Where(w => w.Email == userMail).Select(w => w.Id).FirstOrDefault();
-			var writerValues = writerManager.GetById(writerId);
-			return View(writerValues);
+			var values = await _userManager.FindByNameAsync(User.Identity.Name);
+			UserUpdateViewModel userUpdateViewModel = new UserUpdateViewModel();
+			userUpdateViewModel.eMail = values.Email;
+			userUpdateViewModel.fullName = values.FullName;
+			userUpdateViewModel.imageUrl = values.ImageUrl;
+			userUpdateViewModel.userName = values.UserName;
+			return View(userUpdateViewModel);
 		}
 		[HttpPost]
-		public IActionResult WriterUpdateProfile(Writer writer)
+		public async Task<IActionResult> WriterUpdateProfile(UserUpdateViewModel userUpdateViewModel )
 		{
-			WriterValidator writerValidator = new WriterValidator();
-			ValidationResult results = writerValidator.Validate(writer);
-			if(results.IsValid)
-			{
-				writerManager.Update(writer);
-				return RedirectToAction("Index", "Dashboard");
-
-			}
-			else
-			{
-				foreach (var w in results.Errors)
-				{
-					ModelState.AddModelError(w.PropertyName, w.ErrorMessage);
-				}
-			}
-			return View();
+			var values = await _userManager.FindByEmailAsync(User.Identity.Name);
+			 values.Email = userUpdateViewModel.eMail ;
+			 values.FullName = userUpdateViewModel.fullName;
+			values.ImageUrl = userUpdateViewModel.imageUrl;
+			values.PasswordHash = _userManager.PasswordHasher.HashPassword(values, userUpdateViewModel.password);
+			var result = await _userManager.UpdateAsync(values);
+			return RedirectToAction("Index", "Dashboard");
 		}
 		[AllowAnonymous]
 		[HttpGet]

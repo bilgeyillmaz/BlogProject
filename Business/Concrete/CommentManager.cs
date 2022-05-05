@@ -38,7 +38,12 @@ namespace Business.Concrete
 			throw new NotImplementedException();
 		}
 
-		public List<Comment> GetList(int id)
+        public List<Comment> GetCommentWithBlog()
+        {
+            return _commentDal.GetListWithBlog();
+        }
+
+        public List<Comment> GetList(int id)
         {
             return _commentDal.GetListAll(c => c.BlogId == id);
         }

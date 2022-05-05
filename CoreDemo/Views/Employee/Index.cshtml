@@ -1,0 +1,27 @@
+﻿@using CoreDemo.Controllers
+@model List<EmployeeApiModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>Adı Soyadı</th>
+        <th>Sil</th>
+        <th>Düzenle</th>
+    </tr>
+    @foreach (var e in Model)
+   {
+       <tr>
+           <td>@e.Id</td>
+           <td>@e.Name</td>
+           <td><a href="/Employee/DeleteEmployee/@e.Id/" class="btn btn-outline-danger">Sil</a></td>
+           <td><a href="/Employee/UpdateEmployee/@e.Id/" class="btn btn-outline-success">Düzenle</a></td>
+       </tr>
+   }
+</table>
+<br />
+<a href="/Employee/AddEmployee/" class="btn btn-outline-primary">Yeni Çalışan Girişi</a>

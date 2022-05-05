@@ -13,11 +13,19 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfMessage2Repository : BaseRepository<Message2>, IMessage2Dal
     {
-        public List<Message2> GetListWithMessageByWriter(int id)
+        public List<Message2> GetInboxWithMessageByWriter(int id)
         {
             using (var blogDbContext = new BlogDbContext())
             {
                 return blogDbContext.Message2s.Include(m => m.SenderUser).Where(m => m.ReceiverId == id).ToList();
+            }
+        }
+
+        public List<Message2> GetSendBoxWithMessageByWriter(int id)
+        {
+            using (var blogDbContext = new BlogDbContext())
+            {
+                return blogDbContext.Message2s.Include(m => m.ReceiverUser).Where(m => m.SenderId == id).ToList();
             }
         }
     }
